@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>泰拉瑞亚同人女扶持中心</title>
+    <link rel="icon" href="/assets/favicon.ico" type="image/x-icon">
+    <script src="phaser.min.js"></script>
+</head>
+
+<body>
+
+    <script>
+        const config = {
+            type: Phaser.AUTO,
+            width: 1900,
+            height: 900,
+            pixelArt: true,
+            physics: {
+                default: 'arcade',
+                arcade: {
+                    gravity: { y: 0 },
+                    debug: false
+                }
+            },
+            scene: {
+                preload: preload,
+                create: create,
+                 update: update,
+            }
+        };
+
+        const game = new Phaser.Game(config);
+
+        function preload() {
+            this.load.image('background', '/assets/background.png');
+            this.load.spritesheet('player',
+                'assets/player.png',
+                { frameWidth: 32, frameHeight: 48 }
+            );
+        }
+
+        function create() {
+            this.add.image(950, 450, 'background');
+            player = this.physics.add.sprite(950, 500, 'player');
+            player.setScale(4);
+            player.setBounce(0.2);
+            player.setCollideWorldBounds(true);
+
+            this.anims.create({
+                key: 'turn',
+                frames: [{ key: 'player', frame: 0 }],
+                frameRate: 20
+            });
+
+            this.anims.create({
+                key: 'left',
+                frames: this.anims.generateFrameNumbers('player', { start: 0, end: 3 }),
+                frameRate: 10,
+                repeat: -1
+            });
+            
+            this.anims.create({
+                key: 'up',
+                frames: this.anims.generateFrameNumbers('player', { start: 4, end: 7 }),
+                frameRate: 10,
+                repeat: -1
+            });
+            
+
+            this.anims.create({
+                key: 'right',
+                frames: this.anims.generateFrameNumbers('player', { start: 8, end: 11 }),
+                frameRate: 10,
+                repeat: -1
+            });
+            this.anims.create({
+                key: 'down',
+                frames: this.anims.generateFrameNumbers('player', { start: 12, end: 15 }),
+                frameRate: 10,
+                repeat: -1
+            });
+
+            cursors = this.input.keyboard.createCursorKeys();
+        }
+        VELOCITY = 200;
+        function update() {
+            if (cursors.left.isDown) {
+                player.setVelocityX(-VELOCITY);
+
+                player.anims.play('left', true);
+            }
+            else if (cursors.right.isDown) {
+                player.setVelocityX(VELOCITY);
+
+                player.anims.play('right', true);
+            }else if (cursors.up.isDown) {
+                player.setVelocityY(-VELOCITY);
+
+                player.anims.play('up', true);
+            }
+            else if (cursors.down.isDown) {
+                player.setVelocityY(VELOCITY);
+
+                player.anims.play('down', true);    
+            }
+            else {
+                player.setVelocityX(0);
+                player.setVelocityY(0);
+
+                player.anims.play('turn');
+            }
+        }
+    </script>
+</body>
